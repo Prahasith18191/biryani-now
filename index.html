@@ -581,13 +581,13 @@
 (function(){
   var EM=['🍛','🍗','🍖','🥤','🧋','☕','🍚','🥘','🫓','🌶️','🧅','🍲','🥟'];
   var box=document.getElementById('foodfx'); if(!box) return;
-  var N=Math.min(18,Math.max(12,Math.round(innerWidth/110))), out='';
+  var N=Math.min(24,Math.max(16,Math.round(innerWidth/90))), out='';
   for(var i=0;i<N;i++){
     var e=EM[(Math.random()*EM.length)|0];
     var d=Math.random();                         // depth: 0 far .. 1 near
-    var size=(1.5+d*3.6).toFixed(2),             // rem — bigger = nearer
-        op=(0.10+d*0.26).toFixed(2),
-        blur=(1.8*(1-d)).toFixed(1),             // far ones softly blurred
+    var size=(2.1+d*4.3).toFixed(2),             // rem — bigger = nearer
+        op=(0.24+d*0.44).toFixed(2),
+        blur=(1.0*(1-d)).toFixed(1),             // far ones softly blurred
         left=(Math.random()*98).toFixed(1),
         top=(Math.random()*96).toFixed(1),
         dur=(11+Math.random()*16).toFixed(1),
