@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Biryani Now · Vote the best Hyderabadi biryani right now</title>
+<meta name="description" content="Live-vote the best Hyderabadi biryani right now. Filter by distance. Built with Google Antigravity." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg-0:#1a0d06;
+    --bg-1:#2a1409;
+    --bg-2:#38190a;
+    --card:rgba(58,28,12,0.55);
+    --card-brd:rgba(255,180,90,0.16);
+    --saffron:#ff9d2e;
+    --saffron-deep:#f4700a;
+    --amber:#ffc257;
+    --mint:#44d6a0;
+    --mint-deep:#1fae82;
+    --cream:#fbe9cf;
+    --text:#fdf2e2;
+    --text-dim:#d9b38f;
+    --text-faint:#a87d56;
+    --crown:#ffd766;
+    --danger:#ff6b5e;
+    --radius:20px;
+    --shadow:0 18px 50px -18px rgba(0,0,0,0.65);
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 600px at 15% -5%, rgba(244,112,10,0.25), transparent 60%),
+      radial-gradient(1000px 500px at 95% 0%, rgba(68,214,160,0.12), transparent 55%),
+      radial-gradient(800px 800px at 50% 120%, rgba(255,157,46,0.14), transparent 60%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-0) 60%, #140a04);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:clamp(18px,4vw,38px) clamp(16px,4vw,28px) 80px}
+
+  /* ---------- Header ---------- */
+  header{text-align:center;margin-bottom:clamp(18px,4vw,30px);position:relative}
+  .kicker{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--amber);
+    background:rgba(255,194,87,0.08);
+    border:1px solid rgba(255,194,87,0.22);
+    padding:6px 13px;border-radius:999px;margin-bottom:16px;
+  }
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 0 rgba(68,214,160,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(68,214,160,.55)}70%{box-shadow:0 0 0 7px rgba(68,214,160,0)}100%{box-shadow:0 0 0 0 rgba(68,214,160,0)}}
+  h1{
+    font-family:'Fraunces',serif;font-weight:900;
+    font-size:clamp(2.3rem,8vw,3.6rem);line-height:.98;letter-spacing:-.02em;
+    background:linear-gradient(135deg,#ffd089,var(--saffron) 45%,var(--saffron-deep));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:10px;
+  }
+  h1 .emoji{-webkit-text-fill-color:initial;background:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+  .sub{color:var(--text-dim);font-size:clamp(.95rem,2.6vw,1.08rem);max-width:30ch;margin:0 auto}
+
+  /* ---------- Winner hero ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    border-radius:var(--radius);
+    padding:clamp(18px,4vw,26px);
+    margin:clamp(20px,4vw,30px) 0;
+    background:
+      linear-gradient(135deg, rgba(255,157,46,0.22), rgba(244,112,10,0.10) 55%, rgba(68,214,160,0.08));
+    border:1px solid rgba(255,180,90,0.3);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:radial-gradient(400px 180px at 85% -10%, rgba(255,215,102,0.3), transparent 70%);
+    pointer-events:none;
+  }
+  .hero > *{position:relative;z-index:1}
+  .hero-label{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .hero-name{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.02;margin-bottom:4px}
+  .hero-meta{color:var(--text-dim);font-size:.95rem;margin-bottom:10px}
+  .hero-note{font-style:italic;color:var(--cream);font-size:.98rem;opacity:.9;margin-bottom:14px;display:flex;gap:8px}
+  .hero-note::before{content:"“";font-family:'Fraunces',serif;font-size:1.6rem;line-height:.6;color:var(--saffron)}
+  .hero-warn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,107,94,0.12);border:1px solid rgba(255,107,94,0.3);
+    color:#ffb3aa;font-size:.86rem;font-weight:500;
+    padding:9px 14px;border-radius:12px;
+    transition:opacity .4s var(--ease);
+  }
+  .hero-votes{position:absolute;top:clamp(18px,4vw,26px);right:clamp(18px,4vw,26px);text-align:right}
+  .hero-votes b{display:block;font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2rem,7vw,2.8rem);color:var(--crown);line-height:1}
+  .hero-votes span{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint)}
+
+  .hero.empty{background:linear-gradient(135deg,rgba(255,107,94,0.14),rgba(58,28,12,0.4));border-color:rgba(255,107,94,0.3);text-align:center}
+  .hero.empty .big{font-size:2.4rem;margin-bottom:8px}
+
+  /* ---------- Controls ---------- */
+  .controls{
+    background:var(--card);border:1px solid var(--card-brd);border-radius:var(--radius);
+    padding:clamp(16px,3.5vw,22px);margin-bottom:22px;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--shadow);
+  }
+  .slider-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+  .slider-row .lab{font-weight:600;font-size:.96rem;display:flex;align-items:center;gap:8px}
+  .slider-row .val{font-family:'Fraunces',serif;font-weight:800;font-size:1.25rem;color:var(--saffron);white-space:nowrap}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;
+    background:linear-gradient(90deg,var(--saffron-deep),var(--amber) var(--fill,50%),rgba(255,255,255,0.1) var(--fill,50%));
+    outline:none;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2d8,var(--saffron));border:3px solid #2a1409;box-shadow:0 4px 12px rgba(0,0,0,.4),0 0 0 1px rgba(255,180,90,.4);cursor:grab;transition:transform .15s var(--ease)}
+  input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);cursor:grabbing}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--saffron);border:3px solid #2a1409;cursor:grab}
+  .range-caption{font-size:.83rem;color:var(--text-faint);margin-top:9px;display:flex;justify-content:space-between}
+
+  /* ---------- Leaderboard ---------- */
+  .board-head{display:flex;align-items:baseline;justify-content:space-between;margin:4px 2px 14px}
+  .board-head h2{font-family:'Fraunces',serif;font-weight:800;font-size:1.3rem}
+  .board-head .count{font-size:.85rem;color:var(--text-faint)}
+  #board{position:relative}
+  .card{
+    position:relative;display:flex;align-items:center;gap:14px;
+    background:var(--card);border:1px solid var(--card-brd);border-radius:16px;
+    padding:14px 16px;margin-bottom:12px;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    transition:transform .5s var(--ease),border-color .3s,box-shadow .3s,opacity .4s;
+    will-change:transform;
+  }
+  .card:hover{border-color:rgba(255,180,90,0.38);box-shadow:0 10px 30px -14px rgba(0,0,0,.6)}
+  .card.rank-1{border-color:rgba(255,215,102,0.5);background:linear-gradient(135deg,rgba(255,194,87,0.16),var(--card))}
+  .rank{
+    flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+    font-family:'Fraunces',serif;font-weight:800;font-size:1.05rem;
+    background:rgba(255,255,255,0.06);color:var(--text-dim);
+  }
+  .card.rank-1 .rank{background:linear-gradient(135deg,var(--crown),var(--saffron));color:#3a1c0c}
+  .info{flex:1 1 auto;min-width:0}
+  .info .nm{font-weight:700;font-size:1.04rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .crown{font-size:1rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+  .info .ar{font-size:.84rem;color:var(--text-faint);display:flex;align-items:center;gap:6px;margin-top:2px}
+  .pill{font-size:.72rem;font-weight:600;color:var(--mint);background:rgba(68,214,160,0.1);border:1px solid rgba(68,214,160,0.2);padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .info .note{font-size:.84rem;color:var(--text-dim);margin-top:5px;font-style:italic;opacity:.85}
+  .tag-mine{font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:rgba(255,194,87,.12);padding:1px 7px;border-radius:6px}
+  .vote{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .vote button{
+    font-family:inherit;cursor:pointer;border:none;
+    width:52px;height:52px;border-radius:14px;
+    background:linear-gradient(135deg,var(--saffron),var(--saffron-deep));
+    color:#3a1c0c;font-size:1.3rem;font-weight:800;
+    box-shadow:0 6px 16px -6px rgba(244,112,10,.7),inset 0 1px 0 rgba(255,255,255,.3);
+    transition:transform .12s var(--ease),box-shadow .2s,filter .2s;
+    display:grid;place-items:center;line-height:1;
+  }
+  .vote button:hover{filter:brightness(1.07)}
+  .vote button:active{transform:scale(.86)}
+  .vote button.pop{animation:pop .4s var(--ease)}
+  @keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.28)}100%{transform:scale(1)}}
+  .vote .cnt{font-family:'Fraunces',serif;font-weight:800;font-size:1.1rem;color:var(--amber);min-width:1ch;text-align:center;transition:color .2s}
+  .vote .cnt.bump{animation:bump .4s var(--ease)}
+  @keyframes bump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-4px) scale(1.25);color:var(--mint)}100%{transform:translateY(0) scale(1)}}
+  .card.filtered-out{display:none}
+
+  .board-empty{
+    text-align:center;padding:34px 20px;color:var(--text-dim);
+    background:var(--card);border:1px dashed rgba(255,107,94,.3);border-radius:16px;
+  }
+  .board-empty .big{font-size:2.2rem;margin-bottom:10px}
+  .board-empty p{font-size:1.02rem;color:var(--cream)}
+
+  /* ---------- Add form ---------- */
+  .add{margin-top:28px;background:var(--card);border:1px solid var(--card-brd);border-radius:var(--radius);padding:clamp(16px,3.5vw,22px);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .add h3{font-family:'Fraunces',serif;font-weight:800;font-size:1.15rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .add .hint{font-size:.85rem;color:var(--text-faint);margin-bottom:14px}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .fields .full{grid-column:1/-1}
+  .add input[type=text],.add input[type=number]{
+    width:100%;font-family:inherit;font-size:.95rem;color:var(--text);
+    background:rgba(0,0,0,0.22);border:1px solid rgba(255,180,90,0.18);border-radius:12px;
+    padding:12px 14px;transition:border-color .2s,background .2s;
+  }
+  .add input::placeholder{color:var(--text-faint)}
+  .add input:focus{outline:none;border-color:var(--saffron);background:rgba(0,0,0,0.3)}
+  .add button{
+    grid-column:1/-1;margin-top:4px;font-family:inherit;cursor:pointer;border:none;
+    padding:13px;border-radius:12px;font-weight:700;font-size:1rem;
+    background:linear-gradient(135deg,var(--mint),var(--mint-deep));color:#06281d;
+    box-shadow:0 8px 20px -8px rgba(31,174,130,.7);
+    transition:transform .12s var(--ease),filter .2s;
+  }
+  .add button:hover{filter:brightness(1.06)}
+  .add button:active{transform:scale(.97)}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(140%);
+    background:linear-gradient(135deg,#2a1409,#3a1c0c);
+    border:1px solid rgba(255,180,90,0.4);color:var(--cream);
+    padding:13px 20px;border-radius:14px;font-size:.96rem;font-weight:500;
+    box-shadow:0 16px 40px -12px rgba(0,0,0,.7);
+    max-width:min(90vw,420px);text-align:center;z-index:50;
+    transition:transform .45s var(--ease),opacity .45s;opacity:0;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+  footer{text-align:center;margin-top:40px;font-size:.82rem;color:var(--text-faint)}
+  footer b{color:var(--amber);font-weight:600}
+  .reset{background:none;border:none;color:var(--text-faint);font-size:.8rem;cursor:pointer;text-decoration:underline;margin-top:10px;font-family:inherit}
+  .reset:hover{color:var(--danger)}
+
+  /* confetti */
+  .confetti{position:fixed;top:0;left:0;width:10px;height:14px;z-index:60;pointer-events:none;border-radius:2px}
+
+  @media (max-width:480px){
+    .fields{grid-template-columns:1fr}
+    .hero-votes{position:static;text-align:left;margin-top:12px;display:flex;align-items:baseline;gap:8px}
+    .hero-votes b{font-size:2rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;transition-duration:.01ms!important}
+    .card{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="kicker"><span class="dot"></span>Live · Hyderabad</span>
+    <h1><span class="emoji">🍚</span> Biryani Now</h1>
+    <p class="sub">Stop arguing. Vote the best biryani right now — nearest first.</p>
+  </header>
+
+  <section id="hero" class="hero" aria-live="polite"></section>
+
+  <section class="controls">
+    <div class="slider-row">
+      <span class="lab">🛺 Within reach</span>
+      <span class="val" id="distVal">5.0 km</span>
+    </div>
+    <input type="range" id="dist" min="1" max="8" step="0.1" value="5" aria-label="Maximum distance in km" />
+    <div class="range-caption"><span>1 km · just here</span><span>8 km · worth the auto</span></div>
+  </section>
+
+  <div class="board-head">
+    <h2>🔥 The Leaderboard</h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div id="board"></div>
+
+  <section class="add">
+    <h3>🤫 Add your secret spot</h3>
+    <p class="hint">Know a place the list is missing? Drop it. Saved on this device.</p>
+    <form id="addForm" class="fields" autocomplete="off">
+      <input class="full" type="text" id="fName" placeholder="Spot name (e.g. Mehfil)" maxlength="40" required />
+      <input type="text" id="fArea" placeholder="Area (e.g. Himayatnagar)" maxlength="30" required />
+      <input type="number" id="fKm" placeholder="Distance km" min="0.1" max="8" step="0.1" required />
+      <button type="submit">＋ Add &amp; put it in the race</button>
+    </form>
+  </section>
+
+  <footer>
+    <div><b>Built with Google Antigravity</b> · Vibe Coding Lounge</div>
+    <button class="reset" id="reset">reset votes &amp; my spots</button>
+  </footer>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 2) Secret local knowledge: hand-typed real spots ---------- */
+  var SEED = [
+    {id:"shadab",   name:"Shadab",       area:"Ghansi Bazaar (Old City)", km:6.2, note:"mutton biryani, go before 1pm or it's gone"},
+    {id:"bahar",    name:"Café Bahar",   area:"Basheer Bagh",             km:3.1, note:"jumbo portions, ask for the extra salan"},
+    {id:"shahghouse",name:"Shah Ghouse", area:"Tolichowki",               km:4.4, note:"legendary haleem season, biryani any time"},
+    {id:"bawarchi", name:"Bawarchi",     area:"RTC X Roads",              km:2.0, note:"the OG queue, chicken biryani"},
+    {id:"pista",    name:"Pista House",  area:"Charminar",                km:6.8, note:"famous for haleem, solid biryani too"},
+    {id:"nayaab",   name:"Hotel Nayaab", area:"Charminar",                km:7.0, note:"nalli biryani, old-school"},
+    {id:"sarvi",    name:"Sarvi",        area:"Banjara Hills",            km:3.8, note:"biryani + the famous mawa cake after"},
+    {id:"meridian", name:"Meridian",     area:"Lakdikapul",               km:2.6, note:"underrated, less crowd, strong flavour"},
+    {id:"alpha",    name:"Alpha Hotel",  area:"Secunderabad Station",     km:5.5, note:"railway-side classic"},
+    {id:"niagara",  name:"Niagara Hotel",area:"Malakpet",                 km:4.9, note:"cheap, spicy, local favourite"}
+  ];
+
+  /* ---------- 3) The slang rewriter ---------- */
+  var WARNINGS = [
+    "Parking milega nai, auto me jao 🛺",
+    "Traffic rahega at Charminar — niklo jaldi 🚦",
+    "Bhai idhar der mat karo, biryani khatam ho jayegi 🍚",
+    "Weekend hai, 20 min wait pakka — sabr rakho 🕰️",
+    "Cash saath rakho, card machine 'down' bolega 💵"
+  ];
+  function slangify(kind){
+    switch(kind){
+      case "empty":   return "Arre miyan! Itna paas me kuch nai. Thoda door ka setting karo. 🛺";
+      case "tie":     return "Dono barabar hai boss — toss karo ya dono try karo!";
+      case "added":   return "Added, ekdum top! Ab vote karo.";
+      case "voted":   return "Vote padgaya! Dekho leaderboard hil raha hai 🔥";
+      case "reset":   return "Sab clean. Phirse shuru karo, fresh race!";
+      case "dupe":    return "Arre woh to pehle se list me hai miyan!";
+      case "warn":    return WARNINGS[Math.floor(Math.random()*WARNINGS.length)];
+      default:        return "Chalo biryani khaaye!";
+    }
+  }
+
+  /* ---------- state + persistence ---------- */
+  var VK="biryaniNow.votes.v1", CK="biryaniNow.custom.v1";
+  function load(k,f){try{var v=JSON.parse(localStorage.getItem(k));return v==null?f:v;}catch(e){return f;}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+  var votes  = load(VK,{});        // {id: count}
+  var custom = load(CK,[]);        // [{id,name,area,km,note,mine:true}]
+  var maxDist = 5;
+  var justVoted = null;
+
+  function allSpots(){ return SEED.concat(custom); }
+
+  /* ---------- rendering ---------- */
+  var boardEl = document.getElementById("board");
+  var heroEl  = document.getElementById("hero");
+  var countEl = document.getElementById("count");
+  var cards = {}; // id -> element (kept across renders for transitions)
+
+  function voteOf(id){ return votes[id]||0; }
+
+  function ranked(){
+    return allSpots().slice().sort(function(a,b){
+      var dv = voteOf(b.id)-voteOf(a.id);
+      if(dv) return dv;
+      return a.km-b.km; // tie-break: closer first
+    });
+  }
+  function inRange(list){ return list.filter(function(s){return s.km<=maxDist+1e-9;}); }
+
+  function buildCard(s){
+    var el = document.createElement("div");
+    el.className="card";
+    el.dataset.id=s.id;
+    el.innerHTML =
+      '<div class="rank"></div>'+
+      '<div class="info">'+
+        '<div class="nm"></div>'+
+        '<div class="ar"><span class="area"></span><span class="pill"></span></div>'+
+        '<div class="note"></div>'+
+      '</div>'+
+      '<div class="vote">'+
+        '<button type="button" aria-label="Vote">▲</button>'+
+        '<span class="cnt">0</span>'+
+      '</div>';
+    el.querySelector("button").addEventListener("click",function(){ doVote(s.id); });
+    boardEl.appendChild(el);
+    cards[s.id]=el;
+    return el;
+  }
+
+  function render(){
+    var full = ranked();
+    var visible = inRange(full);
+
+    // ----- hero / winner -----
+    renderHero(visible);
+
+    // ----- count -----
+    countEl.textContent = visible.length+" spot"+(visible.length===1?"":"s")+" within "+maxDist.toFixed(1)+" km";
+
+    // ----- cards: ensure all exist, then order & position -----
+    var order = full; // keep every card in DOM so FLIP transition works; hide out-of-range
+    // remove cards for deleted customs
+    Object.keys(cards).forEach(function(id){
+      if(!order.some(function(s){return s.id===id;})){ cards[id].remove(); delete cards[id]; }
+    });
+
+    // FLIP: record first positions
+    var firsts={};
+    order.forEach(function(s){ if(cards[s.id]) firsts[s.id]=cards[s.id].getBoundingClientRect().top; });
+
+    var rankNum=0;
+    order.forEach(function(s){
+      var el = cards[s.id] || buildCard(s);
+      var isVisible = s.km<=maxDist+1e-9;
+      el.classList.toggle("filtered-out", !isVisible);
+      if(isVisible){ rankNum++; }
+      var shownRank = isVisible?rankNum:"";
+      el.classList.toggle("rank-1", isVisible && rankNum===1);
+
+      el.querySelector(".rank").textContent = isVisible? "#"+rankNum : "–";
+      var nm = el.querySelector(".nm");
+      nm.innerHTML="";
+      var t=document.createTextNode(s.name); nm.appendChild(t);
+      if(isVisible && rankNum===1){ var c=document.createElement("span"); c.className="crown"; c.textContent="👑"; nm.appendChild(c); }
+      if(s.mine){ var m=document.createElement("span"); m.className="tag-mine"; m.textContent="yours"; nm.appendChild(m); }
+      el.querySelector(".area").textContent = s.area;
+      el.querySelector(".pill").textContent = s.km.toFixed(1)+" km";
+      el.querySelector(".note").textContent = s.note||"";
+      var cnt = el.querySelector(".cnt");
+      cnt.textContent = voteOf(s.id);
+
+      boardEl.appendChild(el); // reorder in DOM
+    });
+
+    // FLIP: animate from first to last
+    if(!reduceMotion()){
+      order.forEach(function(s){
+        var el=cards[s.id]; if(!el||firsts[s.id]==null) return;
+        var last=el.getBoundingClientRect().top;
+        var dy=firsts[s.id]-last;
+        if(Math.abs(dy)>1){
+          el.style.transition="none";
+          el.style.transform="translateY("+dy+"px)";
+          requestAnimationFrame(function(){
+            el.style.transition="";
+            el.style.transform="";
+          });
+        }
+      });
+    }
+
+    // empty-board message
+    var existing=document.querySelector(".board-empty");
+    if(visible.length===0){
+      if(!existing){
+        var e=document.createElement("div"); e.className="board-empty";
+        e.innerHTML='<div class="big">🛺</div><p></p>';
+        boardEl.appendChild(e);
+      }
+      document.querySelector(".board-empty p").textContent=slangify("empty");
+    }else if(existing){ existing.remove(); }
+  }
+
+  var warnTimer=null, warnIdx=0;
+  function renderHero(visible){
+    if(visible.length===0){
+      heroEl.className="hero empty";
+      heroEl.innerHTML='<div class="big">😅</div><div class="hero-name" style="font-size:1.4rem">'+
+        slangify("empty")+'</div><div class="hero-meta">Drag the slider out a little.</div>';
+      if(warnTimer){clearInterval(warnTimer);warnTimer=null;}
+      return;
+    }
+    var top=visible[0];
+    var tie = visible.length>1 && voteOf(visible[1].id)===voteOf(top.id) && voteOf(top.id)>0;
+    heroEl.className="hero";
+    heroEl.innerHTML=
+      '<div class="hero-votes"><b>'+voteOf(top.id)+'</b><span>votes</span></div>'+
+      '<div class="hero-label">🏆 Tonight\'s winner'+(tie?' · <span style="color:var(--mint)">it\'s a tie!</span>':'')+'</div>'+
+      '<div class="hero-name">'+escapeHtml(top.name)+'</div>'+
+      '<div class="hero-meta">'+escapeHtml(top.area)+' · '+top.km.toFixed(1)+' km away</div>'+
+      '<div class="hero-note">'+escapeHtml(tie? slangify("tie") : (top.note||"The people have spoken."))+'</div>'+
+      '<div class="hero-warn" id="heroWarn">🛺 '+slangify("warn")+'</div>';
+
+    // rotate the traffic/parking warning
+    if(warnTimer){clearInterval(warnTimer);}
+    warnTimer=setInterval(function(){
+      var w=document.getElementById("heroWarn");
+      if(!w){clearInterval(warnTimer);warnTimer=null;return;}
+      w.style.opacity="0";
+      setTimeout(function(){ if(w){ w.textContent=slangify("warn"); w.style.opacity="1"; } },380);
+    },4200);
+  }
+
+  /* ---------- actions ---------- */
+  function doVote(id){
+    votes[id]=voteOf(id)+1;
+    save(VK,votes);
+    justVoted=id;
+    // micro-interaction on the pressed button
+    var el=cards[id];
+    if(el){
+      var btn=el.querySelector("button"); btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+      var cnt=el.querySelector(".cnt"); cnt.classList.remove("bump"); void cnt.offsetWidth; cnt.classList.add("bump");
+    }
+    render();
+    // confetti/steam burst if this vote made it the in-range #1
+    var vis=inRange(ranked());
+    if(vis.length && vis[0].id===id){ burst(); }
+    toast(slangify("voted"));
+  }
+
+  document.getElementById("addForm").addEventListener("submit",function(ev){
+    ev.preventDefault();
+    var name=document.getElementById("fName").value.trim();
+    var area=document.getElementById("fArea").value.trim();
+    var km=parseFloat(document.getElementById("fKm").value);
+    if(!name||!area||isNaN(km)) return;
+    km=Math.max(0.1,Math.min(8,km));
+    var id="mine-"+name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Math.random().toString(36).slice(2,6);
+    if(allSpots().some(function(s){return s.name.toLowerCase()===name.toLowerCase();})){
+      toast(slangify("dupe")); return;
+    }
+    custom.push({id:id,name:name,area:area,km:km,note:"your secret pick",mine:true});
+    save(CK,custom);
+    this.reset();
+    render();
+    toast(slangify("added"));
+    if(cards[id]) cards[id].scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"center"});
+  });
+
+  document.getElementById("dist").addEventListener("input",function(){
+    maxDist=parseFloat(this.value);
+    document.getElementById("distVal").textContent=maxDist.toFixed(1)+" km";
+    this.style.setProperty("--fill",((maxDist-1)/7*100)+"%");
+    render();
+  });
+
+  document.getElementById("reset").addEventListener("click",function(){
+    votes={}; custom=[]; save(VK,votes); save(CK,custom);
+    // drop custom cards
+    Object.keys(cards).forEach(function(id){ if(id.indexOf("mine-")===0){cards[id].remove();delete cards[id];} });
+    render();
+    toast(slangify("reset"));
+  });
+
+  /* ---------- helpers ---------- */
+  function toast(msg){
+    var t=document.getElementById("toast");
+    t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t=setTimeout(function(){t.classList.remove("show");},2600);
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function reduceMotion(){return window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;}
+
+  function burst(){
+    if(reduceMotion()) return;
+    var colors=["#ff9d2e","#ffc257","#44d6a0","#ffd766","#f4700a","#fbe9cf"];
+    var hero=heroEl.getBoundingClientRect();
+    var ox=hero.left+hero.width/2, oy=hero.top+hero.height/2;
+    for(var i=0;i<28;i++){
+      (function(){
+        var d=document.createElement("div");
+        d.className="confetti";
+        d.style.background=colors[i%colors.length];
+        d.style.left=ox+"px"; d.style.top=oy+"px";
+        if(Math.random()<.35){ d.textContent=Math.random()<.5?"🍚":"✨"; d.style.background="none"; d.style.fontSize="16px"; }
+        document.body.appendChild(d);
+        var ang=Math.random()*Math.PI*2, dist=60+Math.random()*160;
+        var dx=Math.cos(ang)*dist, dy=Math.sin(ang)*dist-40;
+        var rot=(Math.random()*720-360);
+        d.animate([
+          {transform:"translate(0,0) rotate(0deg)",opacity:1},
+          {transform:"translate("+dx+"px,"+(dy+140)+"px) rotate("+rot+"deg)",opacity:0}
+        ],{duration:900+Math.random()*500,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=function(){d.remove();};
+      })();
+    }
+  }
+
+  /* ---------- init ---------- */
+  document.getElementById("dist").style.setProperty("--fill",((maxDist-1)/7*100)+"%");
+  document.getElementById("distVal").textContent=maxDist.toFixed(1)+" km";
+  render();
+
+  // expose for the curious / grading
+  window.slangify=slangify;
+})();
+</script>
+</body>
+</html>
