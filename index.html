@@ -565,5 +565,40 @@
   window.slangify=slangify;
 })();
 </script>
+<div id="foodfx" aria-hidden="true"></div>
+<style>
+  #foodfx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+  #foodfx span{position:absolute;display:block;will-change:transform}
+  #foodfx span{animation:foodfloat linear infinite}
+  @keyframes foodfloat{
+    0%{transform:translate3d(0,10vh,0) rotate(0deg) scale(var(--s))}
+    50%{transform:translate3d(var(--sway,16px),-10vh,0) rotate(190deg) scale(calc(var(--s)*1.09))}
+    100%{transform:translate3d(0,10vh,0) rotate(360deg) scale(var(--s))}
+  }
+  @media (prefers-reduced-motion:reduce){#foodfx span{animation:none}}
+</style>
+<script>
+(function(){
+  var EM=['🍛','🍗','🍖','🥤','🧋','☕','🍚','🥘','🫓','🌶️','🧅','🍲','🥟'];
+  var box=document.getElementById('foodfx'); if(!box) return;
+  var N=Math.min(18,Math.max(12,Math.round(innerWidth/110))), out='';
+  for(var i=0;i<N;i++){
+    var e=EM[(Math.random()*EM.length)|0];
+    var d=Math.random();                         // depth: 0 far .. 1 near
+    var size=(1.5+d*3.6).toFixed(2),             // rem — bigger = nearer
+        op=(0.10+d*0.26).toFixed(2),
+        blur=(1.8*(1-d)).toFixed(1),             // far ones softly blurred
+        left=(Math.random()*98).toFixed(1),
+        top=(Math.random()*96).toFixed(1),
+        dur=(11+Math.random()*16).toFixed(1),
+        delay=(-Math.random()*26).toFixed(1),
+        sway=((Math.random()*44-22)|0);
+    out+='<span style="left:'+left+'%;top:'+top+'%;font-size:'+size+'rem;opacity:'+op+';'
+       +'filter:drop-shadow(0 12px 22px rgba(0,0,0,.5)) blur('+blur+'px);'
+       +'--s:1;--sway:'+sway+'px;animation-duration:'+dur+'s;animation-delay:'+delay+'s;">'+e+'</span>';
+  }
+  box.innerHTML=out;
+})();
+</script>
 </body>
 </html>
